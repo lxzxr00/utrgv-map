@@ -98,7 +98,18 @@
 				type: 'Research',
 				coords: [-97.48575, 25.89561]
 			},
-			{ code: 'BSTUN', name: 'Student Union Building', type: 'Student Life', coords: [-97.48805, 25.896] }
+			{ code: 'BSTUN', name: 'Student Union Building', type: 'Student Life', coords: [-97.48805, 25.896] },
+			{ code: 'BASFC', name: 'Academic Support Facility', type: 'Academic Support', coords: [-97.49450, 25.89319] },
+			{ code: 'BBRHB', name: 'Biomedical Research', type: 'Research', coords: [-97.48593, 25.89573] },
+			{ code: 'BCAVL', name: 'Cavalry Hall', type: 'Academic', coords: [-97.48860, 25.89654] },
+			{ code: 'BINAB', name: 'Interdisciplinary Academic Building', type: 'Academic', coords: [-97.48623, 25.89135] },
+			{ code: 'BMSLC', name: 'Music Science & Learning Center', type: 'Arts', coords: [-97.48575, 25.89319] },
+			{ code: 'BNOB', name: 'North Office Building', type: 'Office', coords: [25.89787, -97.48635] },
+			{ code: 'BRAHC', name: 'Regional Academic Health Center', type: 'Health / Research', coords: [26.17447, -97.66551] },
+			{ code: 'BROBC', name: 'Research Office Building', type: 'Research', coords: [25.89479, -97.48377] },
+			{ code: 'BRUST', name: 'Rustenbery Hall', type: 'Academic', coords: [25.89778, -97.48645] },
+			{ code: 'BSABH', name: 'Sabal Hall', type: 'Residential', coords: [25.89282, -97.48776] },
+			{ code: 'BVOTS', name: 'Vocational Trade Shops', type: 'Vocational', coords: [25.89783, -97.48874] }
 		]
 	};
 
