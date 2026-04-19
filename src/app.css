@@ -68,10 +68,60 @@ body {
 	pointer-events: auto;
 }
 
-#panel {
+
+.lstack {
 	position: absolute;
 	top: 16px;
 	left: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	z-index: 10;
+	transition: transform 0.28s ease;
+}
+
+.lstack.closed {
+	transform: translateX(calc(-100% + 34px));
+}
+
+
+.l-tab {
+	position: absolute;
+	right: -34px;
+	top: 22px;
+	width: 34px;
+	height: 92px;
+	border-radius: 0 12px 12px 0;
+	border: 1px solid var(--bdr);
+	border-left: none;
+	background: var(--bg-panel);
+	color: var(--text-1);
+	cursor: pointer;
+	box-shadow: 0 8px 28px var(--shadow);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	transition: var(--tr);
+}
+
+.l-tab:hover {
+	background: var(--accent-dim);
+	border-color: var(--accent-bdr);
+}
+
+.l-tab-label {
+	writing-mode: vertical-rl;
+	transform: rotate(180deg);
+	font-size: 10px;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--text-3);
+}
+
+#panel {
+	position: relative;
 	width: 260px;
 	background: var(--bg-panel);
 	backdrop-filter: blur(18px);
@@ -117,6 +167,10 @@ body {
 	gap: 10px;
 	z-index: 11;
 	transition: right 0.28s ease;
+}
+
+.admin-under {
+	align-self: flex-start;
 }
 
 .rtbtn {

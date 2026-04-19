@@ -117,6 +117,8 @@
 	let selectedEvent = $state(null);
 	let ready = { dark: false, light: false };
 	let blistOpen = false;
+	let rotateOn = $state(false);
+	let leftOpen = $state(true);
 
 	let maps = null;
 	let keyHandler = null;
@@ -189,7 +191,6 @@
 			sym
 		);
 
-		if (!document.getElementById('tog-b').checked) m.setLayoutProperty('bld3d', 'visibility', 'none');
 	}
 
 	function addCampusMarker(m, t, id, c) {
@@ -259,27 +260,6 @@
 		});
 	}
 
-	function renderBuildingList(campusId) {
-		const list = document.getElementById('blist');
-		list.innerHTML = '';
-		BUILDINGS[campusId].forEach((b) => {
-			const btn = document.createElement('button');
-			btn.className = 'blitem';
-			btn.id = `bli-${b.code}`;
-			btn.innerHTML = `<span class="blcode">${b.code}</span><span class="blname">${b.name}</span>`;
-			btn.addEventListener('click', () => selectBuilding(b));
-			list.appendChild(btn);
-		});
-	}
-
-	function toggleBuildingList() {
-		blistOpen = !blistOpen;
-		const list = document.getElementById('blist');
-		const arrow = document.getElementById('barrow');
-		list.classList.toggle('open', blistOpen);
-		arrow.classList.toggle('open', blistOpen);
-	}
-
 	function selectBuilding(bldg) {
 		const campus = Object.entries(BUILDINGS).find(([, arr]) => arr.some((b) => b.code === bldg.code))?.[0];
 		if (!campus) return;
@@ -296,8 +276,6 @@
 			});
 		}
 
-		document.querySelectorAll('.blitem').forEach((b) => b.classList.remove('active'));
-
 		selectedBldg = bldg.code;
 
 		['dark', 'light'].forEach((t) => {
@@ -306,9 +284,6 @@
 				maps[t].setFeatureState({ source: src, id: bldg.code }, { selected: true });
 			}
 		});
-
-		document.getElementById(`bli-${bldg.code}`)?.classList.add('active');
-		document.getElementById(`bli-${bldg.code}`)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 
 		maps[theme].flyTo({
 			center: bldg.coords,
@@ -358,7 +333,6 @@
 		}
 		selectedBuilding = null;
 		clearSelectedEvent();
-		document.querySelectorAll('.blitem').forEach((b) => b.classList.remove('active'));
 	}
 
 	function toggleOfficial() {
@@ -512,15 +486,11 @@
 			selectedBldg = null;
 		}
 
-		document.querySelectorAll('.blitem').forEach((b) => b.classList.remove('active'));
-
 		document.querySelectorAll('.cbtn').forEach((b) => b.classList.remove('active'));
 		document.getElementById(`btn-${id}`)?.classList.add('active');
 		document.querySelectorAll('.mrkr').forEach((m) => m.classList.remove('active'));
 		document.getElementById(`mk-dark-${id}`)?.classList.add('active');
 		document.getElementById(`mk-light-${id}`)?.classList.add('active');
-
-		renderBuildingList(id);
 
 		showBadge(`Flying to ${c.label}…`);
 		maps[theme].flyTo({
@@ -605,10 +575,12 @@
 
 	function toggleRotate(on) {
 		if (on) {
+			rotateOn = true;
 			rotInt = setInterval(() => {
 				maps[theme].easeTo({ bearing: maps[theme].getBearing() + 0.3, duration: 50, easing: (t) => t });
 			}, 50);
 		} else {
+			rotateOn = false;
 			clearInterval(rotInt);
 			rotInt = null;
 		}
@@ -629,7 +601,6 @@
 		addEventLayers(m, t);
 		ready[t] = true;
 		if (ready.dark && ready.light) {
-			renderBuildingList('e');
 			flyTo('e');
 			upsertEventSources();
 		}
@@ -687,9 +658,7 @@
 			if (e.key === '0') showOverview();
 			if (e.key === 't' || e.key === 'T') toggleTheme();
 			if (e.key === 'r' || e.key === 'R') {
-				const cb = document.getElementById('tog-r');
-				cb.checked = !cb.checked;
-				toggleRotate(cb.checked);
+				toggleRotate(!rotateOn);
 			}
 		};
 		document.addEventListener('keydown', keyHandler);
@@ -713,7 +682,12 @@
 <div id="map-dark" class="map-layer active"></div>
 <div id="map-light" class="map-layer"></div>
 
-<div id="panel">
+<div class="lstack" class:closed={!leftOpen}>
+	<button class="l-tab" onclick={() => (leftOpen = !leftOpen)} type="button">
+		{leftOpen ? '⟨' : '⟩'}
+		<span class="l-tab-label">Campuses</span>
+	</button>
+	<div id="panel">
 	<div class="ph">
 		<div class="logo">UTRGV <span>Edinburg &amp; Brownsville · MapLibre</span></div>
 		<button id="theme-btn" onclick={toggleTheme} title="Toggle light / dark (T)">
@@ -746,41 +720,10 @@
 		</div>
 	</div>
 	<hr />
-	<div class="tgrp">
-		<div class="slbl">Layers</div>
-		<div class="trow">
-			<span>3D buildings</span>
-			<label class="tog">
-				<input type="checkbox" id="tog-b" checked onchange={(e) => toggleBuildings(e.currentTarget.checked)} />
-				<span class="tog-track"></span>
-				<span class="tog-thumb"></span>
-			</label>
-		</div>
-		<div class="trow">
-			<span>Terrain</span>
-			<label class="tog">
-				<input type="checkbox" id="tog-t" checked onchange={(e) => toggleTerrain(e.currentTarget.checked)} />
-				<span class="tog-track"></span>
-				<span class="tog-thumb"></span>
-			</label>
-		</div>
-		<div class="trow">
-			<span>Auto-rotate</span>
-			<label class="tog">
-				<input type="checkbox" id="tog-r" onchange={(e) => toggleRotate(e.currentTarget.checked)} />
-				<span class="tog-track"></span>
-				<span class="tog-thumb"></span>
-			</label>
-		</div>
+	<div class="empt">Press a building pin to view details.</div>
 	</div>
-	<hr />
-	<div class="bsect">
-		<button class="bsect-hdr" onclick={toggleBuildingList}>
-			<span class="slbl">Buildings</span>
-			<span class="bsect-arrow" id="barrow">▾</span>
-		</button>
-		<div id="blist"></div>
-	</div>
+
+	<a class="rtbtn admin-under" href={`${base}/admin`} title="Admin">A</a>
 </div>
 
 <div class="rtog" style:--rtog-right={(selectedBuilding || showOfficial || showUnofficial) ? '288px' : '16px'}>
@@ -837,7 +780,7 @@
 					{#each officialEvents as ev (ev.id)}
 						<button class="evitem" class:active={selectedEvent?.id === ev.id} onclick={() => selectEvent(ev)}>
 							<div class="evtitle">{ev.title}</div>
-							<div class="evmeta">{ev.organization_name ?? '—'}</div>
+							<div class="evmeta">{ev.building_code ?? ev.location_text ?? '—'}</div>
 						</button>
 					{/each}
 				{/if}
@@ -856,7 +799,7 @@
 					{#each unofficialEvents as ev (ev.id)}
 						<button class="evitem" class:active={selectedEvent?.id === ev.id} onclick={() => selectEvent(ev)}>
 							<div class="evtitle">{ev.title}</div>
-							<div class="evmeta">{ev.organization_name ?? '—'}</div>
+							<div class="evmeta">{ev.building_code ?? ev.location_text ?? '—'}</div>
 						</button>
 					{/each}
 				{/if}
@@ -865,8 +808,4 @@
 	</div>
 {/if}
 
-<div id="info">
-	<strong>UTRGV Campus Map</strong> · MapLibre GL JS · No API key needed<br />
-	Click a <strong>◆ diamond pin</strong> or building name to explore · <strong>T</strong> Theme
-</div>
 <div id="badge"></div>
