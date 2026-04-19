@@ -43,6 +43,8 @@
 	let details = $state('');
 	let campus = $state('e');
 	let buildingCode = $state('');
+	let startAtLocal = $state('');
+	let endAtLocal = $state('');
 
 	let submitting = $state(false);
 	let submitted = $state(false);
@@ -92,6 +94,24 @@
 			errorMsg = 'Building is required.';
 			return;
 		}
+		if (!startAtLocal) {
+			errorMsg = 'Start date is required.';
+			return;
+		}
+		if (!endAtLocal) {
+			errorMsg = 'End date is required.';
+			return;
+		}
+		const startAt = new Date(`${startAtLocal}T00:00:00`);
+		const endAt = new Date(`${endAtLocal}T00:00:00`);
+		if (Number.isNaN(startAt.getTime()) || Number.isNaN(endAt.getTime())) {
+			errorMsg = 'Invalid start/end date.';
+			return;
+		}
+		if (endAt < startAt) {
+			errorMsg = 'End date must be on or after start date.';
+			return;
+		}
 		if (!validateEmail(email)) {
 			errorMsg = 'Enter a valid email address.';
 			return;
@@ -110,8 +130,8 @@
 				campus,
 				building_code: buildingCode,
 				location_text: null,
-				start_at: null,
-				end_at: null
+				start_at: startAt.toISOString(),
+				end_at: endAt.toISOString()
 			});
 			if (error) {
 				errorMsg = error.message;
@@ -172,6 +192,16 @@
 			</select>
 		</div>
 
+		<div class="cgrp">
+			<div class="slbl">Start date</div>
+			<input class="tin" type="date" bind:value={startAtLocal} />
+		</div>
+
+		<div class="cgrp">
+			<div class="slbl">End date</div>
+			<input class="tin" type="date" bind:value={endAtLocal} />
+		</div>
+
 		{#if errorMsg}
 			<div class="err">{errorMsg}</div>
 		{/if}
@@ -197,15 +227,18 @@
 		position: absolute;
 		inset: 0;
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: center;
 		padding: 24px;
 		background: var(--bg-page);
+		overflow-y: auto;
 	}
 
 	.reqpanel {
 		width: 360px;
 		max-width: calc(100vw - 32px);
+		max-height: calc(100vh - 48px);
+		overflow-y: auto;
 		background: var(--bg-panel);
 		border: 1px solid var(--bdr);
 		border-radius: 16px;

@@ -10,14 +10,17 @@
 	let loading = $state(true);
 	let signingIn = $state(false);
 	let isAdmin = $state(false);
-	let tickets = $state([]);
+	let official = $state([]);
+	let unofficial = $state([]);
 	let promotingId = $state(null);
+	let deletingId = $state(null);
 
 	async function loadAdminState() {
 		loading = true;
 		errorMsg = '';
 		isAdmin = false;
-		tickets = [];
+		official = [];
+		unofficial = [];
 
 		const { data: userData } = await supabase.auth.getUser();
 		const user = userData?.user;
@@ -47,8 +50,8 @@
 		isAdmin = true;
 		const { data, error } = await supabase
 			.from('events')
-			.select('id, kind, title, description, organization_name, campus, building_code, published_at')
-			.eq('kind', 'unofficial')
+			.select('id, kind, title, description, organization_name, campus, building_code, start_at, end_at, published_at')
+			.in('kind', ['official', 'unofficial'])
 			.order('published_at', { ascending: false, nullsFirst: false });
 
 		if (error) {
@@ -57,7 +60,8 @@
 			return;
 		}
 
-		tickets = data ?? [];
+		official = (data ?? []).filter((e) => e.kind === 'official');
+		unofficial = (data ?? []).filter((e) => e.kind === 'unofficial');
 		loading = false;
 	}
 
@@ -93,9 +97,26 @@
 				errorMsg = error.message;
 				return;
 			}
-			tickets = tickets.filter((t) => t.id !== ticket.id);
+			unofficial = unofficial.filter((t) => t.id !== ticket.id);
+			official = [{ ...ticket, kind: 'official' }, ...official];
 		} finally {
 			promotingId = null;
+		}
+	}
+
+	async function remove(ticket) {
+		deletingId = ticket.id;
+		errorMsg = '';
+		try {
+			const { error } = await supabase.from('events').delete().eq('id', ticket.id);
+			if (error) {
+				errorMsg = error.message;
+				return;
+			}
+			unofficial = unofficial.filter((t) => t.id !== ticket.id);
+			official = official.filter((t) => t.id !== ticket.id);
+		} finally {
+			deletingId = null;
 		}
 	}
 
@@ -111,7 +132,7 @@
 <div class="reqwrap">
 	<div class="reqpanel">
 		<div class="ph">
-			<div class="logo">Admin <span>Unofficial tickets</span></div>
+			<div class="logo">Admin <span>Events</span></div>
 			<a class="rtbtn" href={base || '/'} title="Back to map">←</a>
 		</div>
 		<hr />
@@ -140,20 +161,43 @@
 		{:else}
 			<button id="btn-ov" onclick={signOut}>Sign out</button>
 			<hr />
-
-			{#if tickets.length === 0}
-				<div class="empt">No unofficial tickets.</div>
-			{:else}
-				{#each tickets as t (t.id)}
-					<div class="evitem" style="cursor: default">
-						<div class="evtitle">{t.title}</div>
-						<div class="evmeta">{t.campus?.toUpperCase() ?? ''}{t.building_code ? ` · ${t.building_code}` : ''}</div>
-						<button id="btn-ov" disabled={promotingId === t.id} onclick={() => promote(t)}>
-							{promotingId === t.id ? 'Promoting…' : 'Promote to official'}
-						</button>
-					</div>
-				{/each}
-			{/if}
+			<div class="cols">
+				<div class="col">
+					<div class="slbl">Official</div>
+					{#if official.length === 0}
+						<div class="empt">No official events.</div>
+					{:else}
+						{#each official as e (e.id)}
+							<div class="evitem" style="cursor: default">
+								<div class="evtitle">{e.title}</div>
+								<div class="evmeta">{e.campus?.toUpperCase() ?? ''}{e.building_code ? ` · ${e.building_code}` : ''}</div>
+								<button id="btn-ov" disabled={deletingId === e.id} onclick={() => remove(e)}>
+									{deletingId === e.id ? 'Deleting…' : 'Delete'}
+								</button>
+							</div>
+						{/each}
+					{/if}
+				</div>
+				<div class="col">
+					<div class="slbl">Unofficial</div>
+					{#if unofficial.length === 0}
+						<div class="empt">No unofficial events.</div>
+					{:else}
+						{#each unofficial as e (e.id)}
+							<div class="evitem" style="cursor: default">
+								<div class="evtitle">{e.title}</div>
+								<div class="evmeta">{e.campus?.toUpperCase() ?? ''}{e.building_code ? ` · ${e.building_code}` : ''}</div>
+								<button id="btn-ov" disabled={promotingId === e.id} onclick={() => promote(e)}>
+									{promotingId === e.id ? 'Promoting…' : 'Promote'}
+								</button>
+								<button id="btn-ov" disabled={deletingId === e.id} onclick={() => remove(e)}>
+									{deletingId === e.id ? 'Deleting…' : 'Delete'}
+								</button>
+							</div>
+						{/each}
+					{/if}
+				</div>
+			</div>
 
 			<button id="btn-ov" onclick={() => goto(base || '/')}>Back to map</button>
 		{/if}
@@ -172,7 +216,7 @@
 	}
 
 	.reqpanel {
-		width: 420px;
+		width: 860px;
 		max-width: calc(100vw - 32px);
 		background: var(--bg-panel);
 		border: 1px solid var(--bdr);
@@ -182,6 +226,19 @@
 		flex-direction: column;
 		gap: 14px;
 		box-shadow: 0 8px 36px var(--shadow);
+	}
+
+	.cols {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 14px;
+	}
+
+	.col {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		min-width: 0;
 	}
 
 	.tin {
