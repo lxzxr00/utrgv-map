@@ -1,0 +1,29 @@
+
+[8mHINT: Run "sv --help" to get the full list of commands, add-ons, and examples to one-shot and skip interactive prompts.[28m
+[90mT[39m  Welcome to the Svelte CLI! [90m(v0.15.1)[39m
+[90m|[39m
+[32m*[39m  Project created
+[90m|[39m
+[32m*[39m  Successfully setup add-ons: [92msveltekit-adapter[39m
+[90m|[39m
+[90m|[39m  [90m[90m[2mTo skip prompts next time, run:[22m[39m[39m
+[34m•[39m  [90mnpx sv@0.15.1 create --template minimal --types jsdoc --add sveltekit-adapter="adapter:static" --no-download-check --install npm .[39m
+[90m|[39m
+[32mo[39m  Installing dependencies with [1m[96mnpm[39m[22m...
+[2K[1A[2K[G[2K[1A[2K[1A[2K[G[2K[1A[2K[1A[2K[1A[2K[G[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[90m|[39m
+[32m*[39m  Successfully installed dependencies with [1m[96mnpm[39m[22m
+[90m|[39m
+[32mo[39m  [0mWhat's next?[0m [90m-------------------------------+[39m
+[90m|[39m                                              [90m|[39m
+[90m|[39m  📁 Project steps                            [90m|[39m
+[90m|[39m                                              [90m|[39m
+[90m|[39m    1: [1m[96mnpm run dev -- --open[39m[22m                  [90m|[39m
+[90m|[39m                                              [90m|[39m
+[90m|[39m  To close the dev server, hit [1m[96mCtrl-C[39m[22m         [90m|[39m
+[90m|[39m                                              [90m|[39m
+[90m|[39m  Stuck? Visit us at [36mhttps://svelte.dev/chat[39m  [90m|[39m
+[90m|[39m                                              [90m|[39m
+[90m+----------------------------------------------+[39m
+[90m|[39m
+[90m—[39m  You're all set!
+
