@@ -227,6 +227,15 @@
 		transition: var(--tr);
 	}
 
+	.tin::placeholder {
+		color: var(--text-3);
+	}
+
+	select.tin option {
+		background: var(--bg-panel);
+		color: var(--text-1);
+	}
+
 	.tarea {
 		min-height: 110px;
 		resize: vertical;

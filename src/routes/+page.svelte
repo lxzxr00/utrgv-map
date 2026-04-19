@@ -655,19 +655,19 @@
 			dark: new maplibregl.Map({
 				container: 'map-dark',
 				style: STYLES.dark,
-				center: [-97.836, 26.102],
-				zoom: 9,
-				pitch: 30,
-				bearing: 0,
+				center: CAMPS.e.center,
+				zoom: CAMPS.e.zoom,
+				pitch: CAMPS.e.pitch,
+				bearing: CAMPS.e.bearing,
 				antialias: true
 			}),
 			light: new maplibregl.Map({
 				container: 'map-light',
 				style: STYLES.light,
-				center: [-97.836, 26.102],
-				zoom: 9,
-				pitch: 30,
-				bearing: 0,
+				center: CAMPS.e.center,
+				zoom: CAMPS.e.zoom,
+				pitch: CAMPS.e.pitch,
+				bearing: CAMPS.e.bearing,
 				antialias: true
 			})
 		};
