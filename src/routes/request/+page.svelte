@@ -1,5 +1,6 @@
 <script>
 	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 	import { supabase } from '$lib/supabaseClient';
 
 	const BUILDINGS = {
@@ -134,7 +135,7 @@
 	<div class="reqpanel">
 		<div class="ph">
 			<div class="logo">Request <span>Unofficial event</span></div>
-			<a class="rtbtn" href="/" title="Back to map">←</a>
+			<a class="rtbtn" href={base || '/'} title="Back to map">←</a>
 		</div>
 		<hr />
 
@@ -186,7 +187,7 @@
 		</button>
 
 		{#if submitted}
-			<button id="btn-ov" onclick={() => goto('/')}>Back to map</button>
+			<button id="btn-ov" onclick={() => goto(base || '/')}>Back to map</button>
 		{/if}
 	</div>
 </div>

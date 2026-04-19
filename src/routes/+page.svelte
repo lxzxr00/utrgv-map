@@ -1,5 +1,6 @@
 <script>
 	import { onDestroy, onMount } from 'svelte';
+	import { base } from '$app/paths';
 	import maplibregl from 'maplibre-gl';
 	import { supabase } from '$lib/supabaseClient';
 
@@ -785,7 +786,7 @@
 <div class="rtog" style:--rtog-right={(selectedBuilding || showOfficial || showUnofficial) ? '288px' : '16px'}>
 	<button class="rtbtn" class:active={showOfficial} onclick={toggleOfficial} title="Toggle official events">O</button>
 	<button class="rtbtn" class:active={showUnofficial} onclick={toggleUnofficial} title="Toggle unofficial events">U</button>
-	<a class="rtbtn" href="/request" title="Request an unofficial event">+</a>
+	<a class="rtbtn" href={`${base}/request`} title="Request an unofficial event">+</a>
 </div>
 
 {#if selectedBuilding || showOfficial || showUnofficial}

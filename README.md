@@ -29,6 +29,10 @@ You can preview the production build with `npm run preview`.
 
 This project uses `@sveltejs/adapter-static` and writes output to `build/`.
 
-If your repo is published at `https://<user>.github.io/<repo>/`, set `BASE_PATH` to `/<repo>` during the build so asset URLs resolve correctly.
+For `https://<user>.github.io/utrgv-map/` deployments:
+- Set `BASE_PATH` to `/utrgv-map` during build.
+- Set GitHub Actions secrets:
+  - `PUBLIC_SUPABASE_URL`
+  - `PUBLIC_SUPABASE_ANON_KEY`
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
